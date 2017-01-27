@@ -1,24 +1,36 @@
-# README
+# how to use this app
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+#### migrate the database:
 
-Things you may want to cover:
+`
+➜ rails db:migrate
+`
 
-* Ruby version
+#### create Base64 encoded string of this user’s username and password. Open up your rails console and type in the following (see db/seeds.rb, I have inserted data into the database there)
 
-* System dependencies
+`
+irb(main):001:0> Base64.encode64("omz@gmail.com:rahasia")
+`
 
-* Configuration
+return:
 
-* Database creation
+=> "b216QGdtYWlsLmNvbTpyYWhhc2lh\n"
 
-* Database initialization
+#### run our initial request to get a valid token with cURL:
 
-* How to run the test suite
+`
+➜ curl http://localhost:3000/token -H 'Authorization: Basic b216QGdtYWlsLmNvbTpyYWhhc2lh\n'                                   ` 
 
-* Services (job queues, cache servers, search engines, etc.)
+the output:
 
-* Deployment instructions
+{"token":"6980f982ab9fef7171999600187427fd"}% 
 
-* ...
+#### submit request with token and get data:
+
+`
+➜ curl http://localhost:3000/api/v1/posts/1 -H 'Authorization: Token token=6980f982ab9fef7171999600187427fd'
+` 
+
+the output:
+
+{"id":1,"title":"First Post","body":"An Airplane","created_at":"2017-01-27T18:47:56.923Z","comments":[]}%       
